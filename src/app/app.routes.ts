@@ -13,6 +13,8 @@ export const routes: Routes = [
   { path: 'conges', loadComponent: () => import('./components/conges/conges.component').then(m => m.CongesComponent), canActivate: [authGuard] },
   { path: 'conges/nouvelle', loadComponent: () => import('./components/conges/nouvelle-conge.component').then(m => m.NouvelleConge), canActivate: [authGuard] },
   { path: 'profil', loadComponent: () => import('./components/profil/profil.component').then(m => m.ProfilComponent), canActivate: [authGuard] },
+  { path: 'parametres', loadComponent: () => import('./components/parametres/parametres.component').then(m => m.ParametresComponent), canActivate: [authGuard] },
+  { path: 'performance', loadComponent: () => import('./components/performance/performance.component').then(m => m.PerformanceComponent), canActivate: [authGuard] },
   { path: 'documents', loadComponent: () => import('./components/documents/documents.component').then(m => m.DocumentsComponent), canActivate: [authGuard] },
   { path: 'trombinoscope', loadComponent: () => import('./components/trombinoscope/trombinoscope.component').then(m => m.TrombinoscopeComponent), canActivate: [authGuard] },
   { path: 'notes-frais', loadComponent: () => import('./components/notes-frais/notes-frais.component').then(m => m.NotesFraisComponent), canActivate: [authGuard] },

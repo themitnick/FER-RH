@@ -34,6 +34,11 @@ import { LoginComponent } from './components/login.component';
                 
                 <!-- Navigation Links - Desktop -->
                 <div class="hidden lg:ml-10 lg:flex lg:space-x-1">
+                  <a routerLink="/dashboard" 
+                     routerLinkActive="bg-primary-100 text-primary-700"
+                     class="nav-link">
+                    Tableau de bord
+                  </a>
                   @if (canAccessOperational()) {
                     <a routerLink="/demandes" 
                        routerLinkActive="bg-primary-100 text-primary-700"
@@ -49,6 +54,11 @@ import { LoginComponent } from './components/login.component';
                        routerLinkActive="bg-primary-100 text-primary-700"
                        class="nav-link">
                       Congés
+                    </a>
+                    <a routerLink="/performance" 
+                       routerLinkActive="bg-primary-100 text-primary-700"
+                       class="nav-link">
+                      Performance
                     </a>
                   }
                   
@@ -70,8 +80,15 @@ import { LoginComponent } from './components/login.component';
                 </div>
               </div>
 
-              <!-- Profil utilisateur simple -->
+              <!-- Bouton menu mobile et profil utilisateur -->
               <div class="flex items-center space-x-4">
+                <!-- Bouton hamburger pour mobile -->
+                <button class="lg:hidden p-2 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        (click)="toggleMobileMenu()">
+                  <svg class="h-6 w-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                  </svg>
+                </button>
                 <!-- User Profile avec dropdown -->
                 <div class="relative" (click)="toggleUserMenu()">
                   <button class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500">
@@ -126,19 +143,23 @@ import { LoginComponent } from './components/login.component';
 
                       <!-- Actions -->
                       <div class="py-2">
-                        <button class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-3">
+                        <a routerLink="/profil" 
+                           (click)="showUserMenu.set(false)"
+                           class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-3 block">
                           <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                           </svg>
                           <span>Mon profil</span>
-                        </button>
-                        <button class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-3">
+                        </a>
+                        <a routerLink="/parametres" 
+                           (click)="showUserMenu.set(false)"
+                           class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-3 block">
                           <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                           </svg>
                           <span>Paramètres</span>
-                        </button>
+                        </a>
                         <div class="border-t border-gray-100 mt-2 pt-2">
                           <button (click)="logout()" 
                                   class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center space-x-3 transition-colors">
@@ -156,6 +177,64 @@ import { LoginComponent } from './components/login.component';
             </div>
           </div>
         </nav>
+
+        <!-- Menu Mobile -->
+        @if (showMobileMenu()) {
+          <div class="lg:hidden bg-white border-b border-gray-200 shadow-sm">
+            <div class="px-4 py-2 space-y-1">
+              <a routerLink="/dashboard" 
+                 (click)="closeMobileMenu()"
+                 routerLinkActive="bg-primary-100 text-primary-700"
+                 class="block px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-700 hover:bg-primary-50 rounded-lg transition-all duration-200">
+                Tableau de bord
+              </a>
+              @if (canAccessOperational()) {
+                <a routerLink="/demandes" 
+                   (click)="closeMobileMenu()"
+                   routerLinkActive="bg-primary-100 text-primary-700"
+                   class="block px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-700 hover:bg-primary-50 rounded-lg transition-all duration-200">
+                  Mes demandes
+                </a>
+                <a routerLink="/pointage" 
+                   (click)="closeMobileMenu()"
+                   routerLinkActive="bg-primary-100 text-primary-700"
+                   class="block px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-700 hover:bg-primary-50 rounded-lg transition-all duration-200">
+                  Pointage
+                </a>
+                <a routerLink="/conges" 
+                   (click)="closeMobileMenu()"
+                   routerLinkActive="bg-primary-100 text-primary-700"
+                   class="block px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-700 hover:bg-primary-50 rounded-lg transition-all duration-200">
+                  Congés
+                </a>
+                <a routerLink="/performance" 
+                   (click)="closeMobileMenu()"
+                   routerLinkActive="bg-primary-100 text-primary-700"
+                   class="block px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-700 hover:bg-primary-50 rounded-lg transition-all duration-200">
+                  Performance
+                </a>
+              }
+              
+              @if (canAccessDirection() || canAccessRH()) {
+                <a routerLink="/trombinoscope" 
+                   (click)="closeMobileMenu()"
+                   routerLinkActive="bg-primary-100 text-primary-700"
+                   class="block px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-700 hover:bg-primary-50 rounded-lg transition-all duration-200">
+                  Personnel
+                </a>
+              }
+              
+              @if (canAccessRH()) {
+                <a routerLink="/rh/recrutement" 
+                   (click)="closeMobileMenu()"
+                   routerLinkActive="bg-primary-100 text-primary-700"
+                   class="block px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-700 hover:bg-primary-50 rounded-lg transition-all duration-200">
+                  Recrutement
+                </a>
+              }
+            </div>
+          </div>
+        }
 
         <!-- Main Content -->
         <main class="flex-1 max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 w-full">
@@ -179,6 +258,7 @@ import { LoginComponent } from './components/login.component';
 export class AppComponent implements OnInit {
   user = signal<User | null>(null);
   showUserMenu = signal<boolean>(false);
+  showMobileMenu = signal<boolean>(false);
   
   // Utiliser un signal pour l'état d'authentification qui se met à jour automatiquement
   isAuthenticated = signal<boolean>(false);
@@ -238,6 +318,14 @@ export class AppComponent implements OnInit {
 
   toggleUserMenu() {
     this.showUserMenu.update(show => !show);
+  }
+
+  toggleMobileMenu() {
+    this.showMobileMenu.update(show => !show);
+  }
+
+  closeMobileMenu() {
+    this.showMobileMenu.set(false);
   }
 
   @HostListener('document:click', ['$event'])

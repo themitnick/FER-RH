@@ -284,6 +284,9 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // Vérifier et nettoyer l'état d'authentification au démarrage
+    this.checkAuthenticationState();
+    
     // S'abonner aux changements d'utilisateur
     this.authService.currentUser$.subscribe(user => {
       this.user.set(user);
@@ -304,6 +307,34 @@ export class AppComponent implements OnInit {
         }
       }
     });
+  }
+
+  private checkAuthenticationState() {
+    // Vérifier que localStorage est disponible (pas en SSR)
+    if (typeof localStorage !== 'undefined') {
+      try {
+        const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+        const currentUser = localStorage.getItem('currentUser');
+        
+        // Si on dit être authentifié mais qu'on n'a pas d'utilisateur, nettoyer
+        if (isAuthenticated && !currentUser) {
+          console.warn('État d\'authentification incohérent détecté, nettoyage...');
+          this.authService.logout();
+          return;
+        }
+        
+        // Si on est sur la page login mais qu'on est authentifié, rediriger
+        if (isAuthenticated && currentUser && this.router.url === '/login') {
+          this.router.navigate(['/dashboard']);
+        }
+      } catch (error) {
+        console.error('Erreur lors de la vérification de l\'état d\'authentification:', error);
+        this.authService.logout();
+      }
+    } else {
+      // Si localStorage n'est pas disponible (SSR), s'assurer qu'on n'affiche pas le menu
+      this.isAuthenticated.set(false);
+    }
   }
 
   logout() {

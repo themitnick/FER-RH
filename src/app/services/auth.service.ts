@@ -90,12 +90,48 @@ export class AuthService {
   }
 
   private loadAuthState() {
-    const savedUser = localStorage.getItem('currentUser');
-    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+    // Vérifier que localStorage est disponible (pas en mode SSR)
+    if (typeof localStorage === 'undefined') {
+      console.warn('localStorage non disponible, mode SSR détecté');
+      this.clearAuthState();
+      return;
+    }
     
-    if (savedUser && isAuthenticated) {
-      this.currentUserSubject.next(JSON.parse(savedUser));
-      this.isAuthenticatedSubject.next(true);
+    try {
+      const savedUser = localStorage.getItem('currentUser');
+      const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+      
+      if (savedUser && isAuthenticated) {
+        const user = JSON.parse(savedUser);
+        // Vérifier que l'utilisateur existe toujours dans la base mock
+        const validUser = this.mockUsers.find(u => u.id === user.id);
+        if (validUser) {
+          this.currentUserSubject.next(validUser);
+          this.isAuthenticatedSubject.next(true);
+          console.log('État d\'authentification restauré pour:', user.email);
+        } else {
+          // L'utilisateur n'existe plus, nettoyer l'état
+          console.warn('Utilisateur non trouvé dans la base, nettoyage de l\'état');
+          this.clearAuthState();
+        }
+      } else {
+        // S'assurer que l'état est propre
+        this.clearAuthState();
+      }
+    } catch (error) {
+      console.error('Erreur lors du chargement de l\'état d\'authentification:', error);
+      this.clearAuthState();
+    }
+  }
+
+  private clearAuthState() {
+    this.currentUserSubject.next(null);
+    this.isAuthenticatedSubject.next(false);
+    
+    // Nettoyer localStorage seulement s'il est disponible
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem('currentUser');
+      localStorage.removeItem('isAuthenticated');
     }
   }
 
@@ -110,9 +146,11 @@ export class AuthService {
           this.currentUserSubject.next(user);
           this.isAuthenticatedSubject.next(true);
           
-          // Sauvegarder l'état d'authentification
-          localStorage.setItem('currentUser', JSON.stringify(user));
-          localStorage.setItem('isAuthenticated', 'true');
+          // Sauvegarder l'état d'authentification seulement si localStorage est disponible
+          if (typeof localStorage !== 'undefined') {
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            localStorage.setItem('isAuthenticated', 'true');
+          }
           
           observer.next(user);
           observer.complete();
@@ -124,12 +162,7 @@ export class AuthService {
   }
 
   logout(): void {
-    this.currentUserSubject.next(null);
-    this.isAuthenticatedSubject.next(false);
-    
-    // Supprimer l'état d'authentification
-    localStorage.removeItem('currentUser');
-    localStorage.removeItem('isAuthenticated');
+    this.clearAuthState();
   }
 
   getCurrentUser(): User | null {

@@ -1,0 +1,6 @@
+<!-- Logo placeholder SVG -->
+<svg width="120" height="60" viewBox="0 0 120 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="120" height="60" rx="8" fill="#3B82F6"/>
+  <text x="60" y="35" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="white">FER</text>
+  <text x="60" y="50" font-family="Arial, sans-serif" font-size="8" text-anchor="middle" fill="#93C5FD">PORTAIL RH</text>
+</svg>

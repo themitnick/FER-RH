@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "RH-FER": {
+    "FER-RH": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -61,10 +61,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "RH-FER:build:production"
+              "buildTarget": "FER-RH:build:production"
             },
             "development": {
-              "buildTarget": "RH-FER:build:development"
+              "buildTarget": "FER-RH:build:development"
             }
           },
           "defaultConfiguration": "development"

@@ -10,6 +10,10 @@ Cette application Angular moderne permet la gestion complète des ressources hum
 - **👔 Direction** : Vue d'ensemble, supervision, validation des demandes  
 - **🏢 Équipe RH** : Gestion complète du personnel, recrutement, administration
 
+## 🌐 Démo Live
+
+L'application est déployée automatiquement sur GitHub Pages : [https://votre-username.github.io/FER-RH/](https://votre-username.github.io/FER-RH/)
+
 ## ✨ Fonctionnalités
 
 ### Pour le Personnel Opérationnel
@@ -17,6 +21,7 @@ Cette application Angular moderne permet la gestion complète des ressources hum
 - ⏰ Système de pointage numérique
 - 📅 Demandes de congés et suivi
 - 📊 Tableau de bord personnel
+- 🎯 Suivi des performances et objectifs
 
 ### Pour la Direction
 - 📈 Tableau de bord exécutif
@@ -29,6 +34,7 @@ Cette application Angular moderne permet la gestion complète des ressources hum
 - 🔍 Processus de recrutement
 - 📋 Administration des utilisateurs
 - 📊 Analyses RH avancées
+- 📈 Gestion des évaluations de performance
 
 ## 🚀 Technologies Utilisées
 
@@ -39,6 +45,7 @@ Cette application Angular moderne permet la gestion complète des ressources hum
 - **State Management** : Angular Signals
 - **Authentication** : Service-based with role management
 - **Routing** : Protected routes with guards
+- **Déploiement** : GitHub Pages avec CI/CD automatique
 
 ## 🛠️ Installation et Configuration
 
@@ -171,6 +178,51 @@ ng e2e
 ```
 
 ## 🚀 Déploiement
+
+### GitHub Pages (Automatique)
+
+Le déploiement sur GitHub Pages est automatisé via GitHub Actions. À chaque push sur la branche `main`, l'application est automatiquement construite et déployée.
+
+#### Configuration automatique
+
+1. **Activer GitHub Pages** dans les paramètres du repository
+2. **Sélectionner la source** : GitHub Actions
+3. **Pousser le code** sur la branche main
+
+#### Commandes de déploiement manuel
+
+```bash
+# Déploiement sur GitHub Pages
+npm run deploy
+
+# Ou déploiement avec un message personnalisé
+npm run deploy -- --message="Nouveau déploiement"
+```
+
+### Serveurs traditionnels
+
+L'application inclut des configurations pour différents types de serveurs :
+
+#### Apache (.htaccess)
+```apache
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]
+```
+
+#### Nginx (nginx.conf)
+```nginx
+location / {
+    try_files $uri $uri/ /index.html;
+}
+```
+
+#### IIS (web.config)
+Configuration automatique pour Windows Server/IIS.
+
+#### Node.js (server.js)
+Serveur Express.js inclus pour l'hébergement Node.js.
 
 ### Serveur de développement
 ```bash

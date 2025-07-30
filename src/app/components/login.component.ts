@@ -122,7 +122,7 @@ import { AuthService } from '../services/auth.service';
                   type="button"
                   (click)="loginAsDemo('OPERATIONNEL')"
                   [disabled]="isLoading()"
-                  class="text-left p-2 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-colors disabled:opacity-50">
+                  class="text-left p-3 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all duration-300 disabled:opacity-50 transform hover:scale-[1.02] active:scale-[0.98]">
                   <div class="font-medium text-sm text-gray-900">Personnel Opérationnel</div>
                   <div class="text-xs text-gray-500">Konan.Kouassi&#64;fer.ci</div>
                 </button>
@@ -130,7 +130,7 @@ import { AuthService } from '../services/auth.service';
                   type="button"
                   (click)="loginAsDemo('RH')"
                   [disabled]="isLoading()"
-                  class="text-left p-2 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-colors disabled:opacity-50">
+                  class="text-left p-3 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all duration-300 disabled:opacity-50 transform hover:scale-[1.02] active:scale-[0.98]">
                   <div class="font-medium text-sm text-gray-900">Équipe RH</div>
                   <div class="text-xs text-gray-500">Koné.jean&#64;fer.ci</div>
                 </button>
@@ -138,7 +138,7 @@ import { AuthService } from '../services/auth.service';
                   type="button"
                   (click)="loginAsDemo('DIRECTION')"
                   [disabled]="isLoading()"
-                  class="text-left p-2 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-colors disabled:opacity-50">
+                  class="text-left p-3 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all duration-300 disabled:opacity-50 transform hover:scale-[1.02] active:scale-[0.98]">
                   <div class="font-medium text-sm text-gray-900">Direction</div>
                   <div class="text-xs text-gray-500">fatou.kobenan&#64;fer.ci</div>
                 </button>
@@ -177,8 +177,11 @@ export class LoginComponent {
 
     this.authService.login(this.loginData.email, this.loginData.password).subscribe({
       next: (user) => {
-        this.isLoading.set(false);
-        this.router.navigate(['/dashboard']);
+        // Attendre que l'état soit mis à jour avant la navigation
+        setTimeout(() => {
+          this.isLoading.set(false);
+          this.router.navigate(['/dashboard']);
+        }, 200);
       },
       error: (error) => {
         this.isLoading.set(false);
@@ -189,6 +192,7 @@ export class LoginComponent {
 
   loginAsDemo(role: 'OPERATIONNEL' | 'DIRECTION' | 'RH') {
     this.errorMessage.set('');
+    this.isLoading.set(true);
 
     // Définir les identifiants de démo selon le rôle
     const demoCredentials = {
@@ -197,19 +201,26 @@ export class LoginComponent {
       DIRECTION: { email: 'fatou.kobenan@fer.ci', password: 'demo123' }
     };
 
-    // Pré-remplir les champs
+    // Pré-remplir les champs pour montrer l'animation
     this.loginData.email = demoCredentials[role].email;
     this.loginData.password = demoCredentials[role].password;
 
-    // Connecter automatiquement
-    this.isLoading.set(true);
-    
-    // Simuler un délai de connexion
+    // Utiliser le service d'authentification avec un délai pour l'animation
     setTimeout(() => {
-      this.authService.switchUserRole(role);
-      this.isLoading.set(false);
-      this.router.navigate(['/dashboard']);
-    }, 1000);
+      this.authService.switchUserRole(role).subscribe({
+        next: (user) => {
+          // Attendre que l'état soit mis à jour avant la navigation
+          setTimeout(() => {
+            this.isLoading.set(false);
+            this.router.navigate(['/dashboard']);
+          }, 200);
+        },
+        error: (error) => {
+          this.isLoading.set(false);
+          this.errorMessage.set('Erreur lors de la connexion démonstration');
+        }
+      });
+    }, 1000); // Garde l'animation pendant 1 seconde
   }
 
   togglePassword() {

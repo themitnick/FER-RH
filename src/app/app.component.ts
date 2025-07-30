@@ -179,8 +179,9 @@ import { LoginComponent } from './components/login.component';
 export class AppComponent implements OnInit {
   user = signal<User | null>(null);
   showUserMenu = signal<boolean>(false);
-
-  isAuthenticated = computed(() => this.authService.isLoggedIn());
+  
+  // Utiliser un signal pour l'état d'authentification qui se met à jour automatiquement
+  isAuthenticated = signal<boolean>(false);
 
   canAccessOperational = computed(() => {
     const currentUser = this.user();
@@ -203,24 +204,32 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // S'abonner aux changements d'utilisateur
     this.authService.currentUser$.subscribe(user => {
       this.user.set(user);
-      if (user && this.router.url === '/') {
-        this.router.navigate(['/dashboard']);
-      }
+      // Ne plus gérer la redirection automatique ici pour éviter les conflits
+      // La redirection sera gérée par le composant de login
     });
 
+    // S'abonner aux changements d'état d'authentification
     this.authService.isAuthenticated$.subscribe(isAuth => {
-      if (!isAuth && this.router.url !== '/') {
-        this.router.navigate(['/']);
+      this.isAuthenticated.set(isAuth);
+      if (!isAuth) {
+        // Réinitialiser les données utilisateur lors de la déconnexion
+        this.user.set(null);
+        this.showUserMenu.set(false);
+        // Rediriger vers la page de login si on n'y est pas déjà
+        if (this.router.url !== '/' && this.router.url !== '/login') {
+          this.router.navigate(['/login']);
+        }
       }
     });
   }
 
   logout() {
-    this.authService.logout();
     this.showUserMenu.set(false);
-    this.router.navigate(['/']);
+    this.authService.logout();
+    // La navigation sera gérée par l'abonnement isAuthenticated$ dans ngOnInit
   }
 
   goToDashboard() {

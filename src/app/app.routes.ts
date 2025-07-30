@@ -19,4 +19,5 @@ export const routes: Routes = [
   { path: 'rh/recrutement', loadComponent: () => import('./components/rh/recrutement.component').then(m => m.RecrutementComponent), canActivate: [authGuard] },
   { path: 'rh/personnel', loadComponent: () => import('./components/rh/personnel.component').then(m => m.PersonnelComponent), canActivate: [authGuard] },
   { path: 'rh/statistiques', loadComponent: () => import('./components/rh/statistiques.component').then(m => m.StatistiquesComponent), canActivate: [authGuard] },
+  { path: '**', redirectTo: '/login' }
 ];

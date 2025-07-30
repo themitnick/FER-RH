@@ -165,13 +165,20 @@ export class AuthService {
   }
 
   // Changer le type d'utilisateur pour les tests
-  switchUserRole(role: 'OPERATIONNEL' | 'DIRECTION' | 'RH'): void {
-    const targetUser = this.mockUsers.find(u => u.role === role);
-    if (targetUser) {
-      this.currentUserSubject.next(targetUser);
-      this.isAuthenticatedSubject.next(true);
-      localStorage.setItem('currentUser', JSON.stringify(targetUser));
-      localStorage.setItem('isAuthenticated', 'true');
-    }
+  switchUserRole(role: 'OPERATIONNEL' | 'DIRECTION' | 'RH'): Observable<User> {
+    return new Observable(observer => {
+      const targetUser = this.mockUsers.find(u => u.role === role);
+      if (targetUser) {
+        this.currentUserSubject.next(targetUser);
+        this.isAuthenticatedSubject.next(true);
+        localStorage.setItem('currentUser', JSON.stringify(targetUser));
+        localStorage.setItem('isAuthenticated', 'true');
+        
+        observer.next(targetUser);
+        observer.complete();
+      } else {
+        observer.error('Utilisateur non trouvé');
+      }
+    });
   }
 }

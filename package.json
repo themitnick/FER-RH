@@ -6,6 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "build:prod": "ng build --configuration production",
+    "build:github": "ng build --configuration production --base-href=/FER-RH/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "deploy": "ng build --configuration production --base-href /FER-RH/ && npx angular-cli-ghpages --dir=dist/FER-RH",
